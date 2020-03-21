@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	lokiComponent = "loki"
-	lokiProvider  = "openshift"
+	lokiSingleServerName = "loki"
+	lokiComponent        = "loki"
+	lokiProvider         = "openshift"
+	lokiSingleServerPort = 3100
 )
 
 func NewStatefulSet(namespace string) *apps.StatefulSet {
@@ -21,10 +23,10 @@ func NewStatefulSet(namespace string) *apps.StatefulSet {
 	)
 	return &apps.StatefulSet{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      DeploymentName,
+			Name:      lokiSingleServerName,
 			Namespace: namespace,
 			Labels: map[string]string{
-				"app":       DeploymentName,
+				"app":       lokiSingleServerName,
 				"component": lokiComponent,
 				"provider":  lokiProvider,
 			},
@@ -32,11 +34,11 @@ func NewStatefulSet(namespace string) *apps.StatefulSet {
 		Spec: apps.StatefulSetSpec{
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
-					"app": DeploymentName,
+					"app": lokiSingleServerName,
 				},
 			},
 			Replicas:    &replicas,
-			ServiceName: DeploymentName,
+			ServiceName: lokiSingleServerName,
 			UpdateStrategy: apps.StatefulSetUpdateStrategy{
 				Type: apps.RollingUpdateStatefulSetStrategyType,
 			},
@@ -44,7 +46,7 @@ func NewStatefulSet(namespace string) *apps.StatefulSet {
 			Template: v1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"app":       DeploymentName,
+						"app":       lokiSingleServerName,
 						"component": lokiComponent,
 						"provider":  lokiProvider,
 					},
@@ -62,7 +64,7 @@ func NewStatefulSet(namespace string) *apps.StatefulSet {
 							Ports: []v1.ContainerPort{
 								{
 									Name:          "http-metrics",
-									ContainerPort: ListenerPort,
+									ContainerPort: lokiSingleServerPort,
 									Protocol:      v1.ProtocolTCP,
 								},
 							},
@@ -70,7 +72,7 @@ func NewStatefulSet(namespace string) *apps.StatefulSet {
 								Handler: v1.Handler{
 									HTTPGet: &v1.HTTPGetAction{
 										Path: "/ready",
-										Port: intstr.FromInt(ListenerPort),
+										Port: intstr.FromInt(lokiSingleServerPort),
 									},
 								},
 								InitialDelaySeconds: 15,
@@ -79,7 +81,7 @@ func NewStatefulSet(namespace string) *apps.StatefulSet {
 								Handler: v1.Handler{
 									HTTPGet: &v1.HTTPGetAction{
 										Path: "/ready",
-										Port: intstr.FromInt(ListenerPort),
+										Port: intstr.FromInt(lokiSingleServerPort),
 									},
 								},
 								InitialDelaySeconds: 15,
@@ -112,7 +114,7 @@ func NewStatefulSet(namespace string) *apps.StatefulSet {
 							VolumeSource: v1.VolumeSource{
 								ConfigMap: &v1.ConfigMapVolumeSource{
 									LocalObjectReference: v1.LocalObjectReference{
-										Name: DeploymentName,
+										Name: lokiSingleServerName,
 									},
 								},
 							},
@@ -134,17 +136,17 @@ func NewService(namespace string) *v1.Service {
 	ports := []v1.ServicePort{
 		{
 			Name:       "server",
-			Port:       ListenerPort,
+			Port:       lokiSingleServerPort,
 			Protocol:   v1.ProtocolTCP,
 			TargetPort: intstr.FromString("http-metrics"),
 		},
 	}
-	return k8shandler.NewService(DeploymentName, namespace, lokiComponent, ports)
+	return k8shandler.NewService(lokiSingleServerName, namespace, lokiComponent, ports)
 }
 
 func NewConfigMap(namespace string) *v1.ConfigMap {
 	data := map[string]string{
 		"loki.yaml": lokiYaml,
 	}
-	return k8shandler.NewConfigMap(DeploymentName, namespace, data)
+	return k8shandler.NewConfigMap(lokiSingleServerName, namespace, data)
 }

@@ -675,7 +675,7 @@ const storeLokiTemplate = `{{- define "storeLoki" }}
 url {{.LokiURL}}
 tenant {{.LokiTenant}}
 line_format json
-extract_kubernetes_labels true
+extract_kubernetes_labels false
 remove_keys docker, kubernetes, pipeline_metadata, hostname, index_name
 {{ if .Target.Secret -}}
 ca_cert '{{ .SecretPath "ca-bundle.crt"}}'

@@ -26,7 +26,7 @@ var _ = Describe("Generating external loki server output store config block", fu
                     url https://logs-us-west1.grafana.net
                     tenant a-tenant
                     line_format json
-                    extract_kubernetes_labels true
+                    extract_kubernetes_labels false
                     remove_keys docker, kubernetes, pipeline_metadata, hostname, index_name
                     <label>
                         # docker
@@ -87,7 +87,7 @@ var _ = Describe("Generating external loki server output store config block", fu
                     url https://logs-us-west1.grafana.net
                     tenant a-tenant
                     line_format json
-                    extract_kubernetes_labels true
+                    extract_kubernetes_labels false
                     remove_keys docker, kubernetes, pipeline_metadata, hostname, index_name
                     ca_cert '/var/run/ocp-collector/secrets/a-secret-ref/ca-bundle.crt'
                     cert '/var/run/ocp-collector/secrets/a-secret-ref/tls.crt'
@@ -154,7 +154,7 @@ var _ = Describe("Generating external loki server output store config block", fu
                     url https://logs-us-west1.grafana.net
                     tenant custom-tenant
                     line_format json
-                    extract_kubernetes_labels true
+                    extract_kubernetes_labels false
                     remove_keys docker, kubernetes, pipeline_metadata, hostname, index_name
                     ca_cert '/var/run/ocp-collector/secrets/a-secret-ref/ca-bundle.crt'
                     cert '/var/run/ocp-collector/secrets/a-secret-ref/tls.crt'

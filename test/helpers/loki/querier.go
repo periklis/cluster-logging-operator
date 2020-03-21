@@ -6,17 +6,17 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func NewQuerierPod(namespace string) *v1.Pod {
+func NewLokiUtilPod(namespace string) *v1.Pod {
 	var cmDefaultMode int32 = 0755
 	return &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      QuerierName,
+			Name:      UtilName,
 			Namespace: namespace,
 		},
 		Spec: v1.PodSpec{
 			Containers: []v1.Container{
 				{
-					Name:            QuerierName,
+					Name:            UtilName,
 					Image:           "alpine:3.11",
 					ImagePullPolicy: v1.PullAlways,
 					Args: []string{
@@ -39,7 +39,7 @@ func NewQuerierPod(namespace string) *v1.Pod {
 					VolumeSource: v1.VolumeSource{
 						ConfigMap: &v1.ConfigMapVolumeSource{
 							LocalObjectReference: v1.LocalObjectReference{
-								Name: QuerierName,
+								Name: UtilName,
 							},
 							DefaultMode: &cmDefaultMode,
 						},
@@ -50,9 +50,9 @@ func NewQuerierPod(namespace string) *v1.Pod {
 	}
 }
 
-func NewQuerierConfigMap(namespace string) *v1.ConfigMap {
+func NewLokiUtilConfigMap(namespace string) *v1.ConfigMap {
 	data := map[string]string{
 		"loki_util": lokiUtil,
 	}
-	return k8shandler.NewConfigMap(QuerierName, namespace, data)
+	return k8shandler.NewConfigMap(UtilName, namespace, data)
 }
