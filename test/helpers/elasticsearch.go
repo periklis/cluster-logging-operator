@@ -141,6 +141,10 @@ func (es *ElasticLogStore) GrepLogs(expr string, timeToWait time.Duration) (stri
 	return "Not Found", fmt.Errorf("Not implemented")
 }
 
+func (es *ElasticLogStore) ClusterLocalEndpoint() string {
+	panic("Not implemented")
+}
+
 //Indices fetches the list of indices stored by Elasticsearch
 func (es *ElasticLogStore) Indices() (Indices, error) {
 	options := metav1.ListOptions{

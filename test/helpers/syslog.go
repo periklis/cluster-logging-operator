@@ -222,6 +222,10 @@ func (syslog *syslogReceiverLogStore) GrepLogs(expr string, timeToWait time.Dura
 	return syslog.grepLogs(expr, "/var/log/infra.log", timeToWait)
 }
 
+func (syslog *syslogReceiverLogStore) ClusterLocalEndpoint() string {
+	panic("Not implemented")
+}
+
 func (tc *E2ETestFramework) createSyslogServiceAccount() (serviceAccount *corev1.ServiceAccount, err error) {
 	serviceAccount = k8shandler.NewServiceAccount("syslog-receiver", OpenshiftLoggingNS)
 	if serviceAccount, err = tc.KubeClient.Core().ServiceAccounts(OpenshiftLoggingNS).Create(serviceAccount); err != nil {

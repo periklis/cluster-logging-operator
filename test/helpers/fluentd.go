@@ -170,6 +170,10 @@ func (es *fluentReceiverLogStore) GrepLogs(expr string, timeToWait time.Duration
 	return "Not Found", fmt.Errorf("Not implemented")
 }
 
+func (fluent *fluentReceiverLogStore) ClusterLocalEndpoint() string {
+	panic("Not implemented")
+}
+
 func (tc *E2ETestFramework) createServiceAccount() (serviceAccount *corev1.ServiceAccount, err error) {
 	serviceAccount = k8shandler.NewServiceAccount("fluent-receiver", OpenshiftLoggingNS)
 	if serviceAccount, err = tc.KubeClient.Core().ServiceAccounts(OpenshiftLoggingNS).Create(serviceAccount); err != nil {

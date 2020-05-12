@@ -15,6 +15,7 @@ const (
 	OutputTypeElasticsearch = "elasticsearch"
 	OutputTypeFluentForward = "fluentForward"
 	OutputTypeSyslog        = "syslog"
+	OutputTypeLoki          = "loki"
 )
 
 // Output defines a destination for log messages.
@@ -84,6 +85,8 @@ type OutputTypeSpec struct {
 	FluentForward *FluentForward `json:"fluentForward,omitempty"`
 	// +optional
 	Elasticsearch *Elasticsearch `json:"elasticsearch,omitempty"`
+	// +optional
+	Loki *Loki `json:"loki,omitempty"`
 }
 
 var otsType = reflect.TypeOf(OutputTypeSpec{})
@@ -133,6 +136,14 @@ type Syslog struct {
 	//
 	// +optional
 	PayloadKey string `json:"payloadKey,omitempty"`
+}
+
+// Loki provides optional extra properties for `type: loki`
+type Loki struct {
+	// Tenant is the name of the tenant of the log records.
+	//
+	// +optional
+	TenantID string `json:"tenantId,omitempty"`
 }
 
 // Placeholders for configuration of other types
