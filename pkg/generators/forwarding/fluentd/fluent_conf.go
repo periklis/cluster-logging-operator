@@ -53,7 +53,7 @@ func (conf *outputLabelConf) Port() string {
 	endpoint := stripProtocol(conf.Target.Endpoint)
 	parts := strings.Split(endpoint, ":")
 	if len(parts) == 1 {
-		return "9200"
+		return "60000"
 	}
 	return parts[1]
 }

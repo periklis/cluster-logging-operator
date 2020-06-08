@@ -16,7 +16,7 @@ const (
 	// internal elasticsearch FQDN to prevent to connect to the global proxy
 	ElasticsearchFQDN  = "elasticsearch.openshift-logging.svc.cluster.local"
 	ElasticsearchName  = "elasticsearch"
-	ElasticsearchPort  = "9200"
+	ElasticsearchPort  = "60000"
 	FluentdName        = "fluentd"
 	KibanaName         = "kibana"
 	KibanaProxyName    = "kibana-proxy"

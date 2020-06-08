@@ -214,7 +214,7 @@ func newCuratorCronJob(cluster *logging.ClusterLogging, curatorName string, elas
 	curatorContainer.Env = []v1.EnvVar{
 		{Name: "K8S_HOST_URL", Value: "https://kubernetes.default.svc.cluster.local"},
 		{Name: "ES_HOST", Value: elasticsearchHost},
-		{Name: "ES_PORT", Value: "9200"},
+		{Name: "ES_PORT", Value: "60000"},
 		{Name: "ES_CLIENT_CERT", Value: "/etc/curator/keys/cert"},
 		{Name: "ES_CLIENT_KEY", Value: "/etc/curator/keys/key"},
 		{Name: "ES_CA", Value: "/etc/curator/keys/ca"},
