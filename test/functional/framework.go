@@ -165,7 +165,7 @@ func (f *FluentdFunctionalFramework) DeployWithVisitors(visitors []runtime.PodBu
 	}
 	log.V(2).Info("Generating Certificates")
 	if err, _, _ = certificates.GenerateCertificates(f.Test.NS.Name,
-		utils.GetScriptsDir(), "elasticsearch",
+		test.GitRoot("scripts"), "elasticsearch",
 		utils.DefaultWorkingDir); err != nil {
 		return err
 	}
@@ -223,8 +223,7 @@ func (f *FluentdFunctionalFramework) DeployWithVisitors(visitors []runtime.PodBu
 	}
 
 	log.V(2).Info("Defining pod...")
-	var containers []corev1.Container
-	f.pod = runtime.NewPod(f.Test.NS.Name, f.Name, containers...)
+	f.pod = runtime.NewPod(f.Test.NS.Name, f.Name)
 	b := runtime.NewPodBuilder(f.pod).
 		WithLabels(f.labels).
 		AddConfigMapVolume("config", f.Name).
