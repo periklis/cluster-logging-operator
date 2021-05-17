@@ -1,5 +1,13 @@
-#! package-manifest: ./deploy/chart/catalog_resources/rh-operators/clusterlogging.v4.7.0.clusterserviceversion.yaml
+#! package-manifest: ./deploy/chart/catalog_resources/rh-operators/clusterlogging.v5.2.0.clusterserviceversion.yaml
 packageName: cluster-logging
 channels:
+<<<<<<< HEAD
 - name: "tech-preview"
   currentCSV: clusterlogging.v5.1.0-preview.1
+||||||| dfa06c2da
+- name: "4.7"
+  currentCSV: clusterlogging.v4.7.0
+=======
+- name: "5.2"
+  currentCSV: clusterlogging.v5.2.0
+>>>>>>> master
