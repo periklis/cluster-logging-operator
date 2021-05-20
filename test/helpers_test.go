@@ -1,7 +1,6 @@
 package test_test
 
 import (
-	"os"
 	"strings"
 
 	. "github.com/onsi/ginkgo"
@@ -185,15 +184,6 @@ var _ = Describe("Helpers", func() {
 	Describe("CurrentUniqueName", func() {
 		It("uses test name", func() {
 			Expect(UniqueNameForTest()).To(MatchRegexp("uses-test-name" + suffix))
-		})
-	})
-
-	Describe("GitRoot", func() {
-		It("finds the repository root", func() {
-			wd, err := os.Getwd()
-			Expect(err).NotTo(HaveOccurred())
-			Expect(wd).To(HavePrefix(GitRoot()))
-			Expect(GitRoot("test", "helpers_test.go")).To(BeARegularFile())
 		})
 	})
 })

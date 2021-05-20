@@ -591,7 +591,7 @@ func (tc *E2ETestFramework) CreatePipelineSecret(pwd, logStoreName, secretName s
 	if err := os.Setenv("WORKING_DIR", workingDir); err != nil {
 		return nil, err
 	}
-	scriptsDir := fmt.Sprintf("%s/scripts", pwd)
+	scriptsDir := utils.GetScriptsDir()
 	if err, _, _ := certificates.GenerateCertificates(OpenshiftLoggingNS, scriptsDir, logStoreName, workingDir); err != nil {
 		return nil, err
 	}

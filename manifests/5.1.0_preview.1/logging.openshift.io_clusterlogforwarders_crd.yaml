@@ -123,7 +123,7 @@ spec:
                           - namespaceUUID
                           type: string
                         groupPrefix:
-                          description: GroupPrefix Add this prefix to all group names.  Useful to avoid group name clashes if an AWS account is used for multiple clusters and  used verbatim (e.g. "" means no prefix)  The default prefix is cluster-name/log-type
+                          description: ' GroupPrefix Add this prefix to all group names.  Useful to avoid group name clashes if an AWS account is used for multiple clusters and  used verbatim (e.g. "" means no prefix)  The default prefix is cluster-name/log-type'
                           type: string
                         region:
                           type: string
@@ -149,6 +149,13 @@ spec:
                           type: array
                         topic:
                           description: Topic specifies the target topic to send logs to.
+                          type: string
+                      type: object
+                    loki:
+                      description: 'Loki provides optional extra properties for `type: loki`'
+                      properties:
+                        tenantId:
+                          description: Tenant is the name of the tenant of the log records.
                           type: string
                       type: object
                     name:
@@ -209,6 +216,7 @@ spec:
                       - elasticsearch
                       - kafka
                       - cloudwatch
+                      - loki
                       type: string
                     url:
                       description: "URL to send log records to. \n An absolute URL, with a scheme. Valid schemes depend on `type`. Special schemes `tcp`, `tls`, `udp` and `udps` are used for types that have no scheme of their own. For example, to send syslog records using secure UDP: \n     { type: syslog, url: udps://syslog.example.com:1234 } \n Basic TLS is enabled if the URL scheme requires it (for example 'https' or 'tls'). The 'username@password' part of `url` is ignored. Any additional authentication material is in the `secret`. See the `secret` field for more details."

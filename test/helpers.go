@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -144,21 +143,4 @@ func Escapelines(logline string) string {
 	logline = strings.ReplaceAll(logline, "\\", "\\\\")
 	logline = strings.ReplaceAll(logline, "\"", "\\\"")
 	return logline
-}
-
-// GitRoot joins paths to the root of the git repository.
-// Panics if current directory is not inside a git repository.
-func GitRoot(paths ...string) string {
-	dir, err := os.Getwd()
-	Must(err)
-	for {
-		info, err := os.Stat(filepath.Join(dir, ".git"))
-		if err == nil && info.IsDir() {
-			return filepath.Join(append([]string{dir}, paths...)...)
-		}
-		dir = filepath.Dir(dir)
-		if dir == "/" {
-			panic(fmt.Errorf("not in a git repository: %v", dir))
-		}
-	}
 }

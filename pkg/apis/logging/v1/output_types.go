@@ -1,5 +1,8 @@
 package v1
 
+// NOTE: The Enum validation on OutputSpec.Type must be updated if the list of
+// known types changes.
+
 // Output type constants, must match JSON tags of OutputTypeSpec fields.
 const (
 	OutputTypeCloudwatch     = "cloudwatch"
@@ -7,10 +10,8 @@ const (
 	OutputTypeFluentdForward = "fluentdForward"
 	OutputTypeSyslog         = "syslog"
 	OutputTypeKafka          = "kafka"
+	OutputTypeLoki           = "loki"
 )
-
-// NOTE: The Enum validation on OutputSpec.Type must be updated if the list of
-// known types changes.
 
 // OutputTypeSpec is a union of optional additional configuration specific to an
 // output type. The fields of this struct define the set of known output types.
@@ -25,6 +26,8 @@ type OutputTypeSpec struct {
 	Kafka *Kafka `json:"kafka,omitempty"`
 	// +optional
 	Cloudwatch *Cloudwatch `json:"cloudwatch,omitempty"`
+	// +optional
+	Loki *Loki `json:"loki,omitempty"`
 }
 
 // Cloudwatch provides configuration for the output type `cloudwatch`
@@ -37,7 +40,7 @@ type Cloudwatch struct {
 	//+kubebuilder:validation:Enum:=logType;namespaceName;namespaceUUID
 	GroupBy LogGroupByType `json:"groupBy,omitempty"`
 
-	//GroupPrefix Add this prefix to all group names.
+	//  GroupPrefix Add this prefix to all group names.
 	//  Useful to avoid group name clashes if an AWS account is used for multiple clusters and
 	//  used verbatim (e.g. "" means no prefix)
 	//  The default prefix is cluster-name/log-type
@@ -156,6 +159,14 @@ type Kafka struct {
 	//
 	// +optional
 	Brokers []string `json:"brokers,omitempty"`
+}
+
+// Loki provides optional extra properties for `type: loki`
+type Loki struct {
+	// Tenant is the name of the tenant of the log records.
+	//
+	// +optional
+	TenantID string `json:"tenantId,omitempty"`
 }
 
 // Placeholders for configuration of other types
