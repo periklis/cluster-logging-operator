@@ -33,7 +33,7 @@ func NewContainer(name string) corev1.Container {
 	}
 }
 
-// Client retrieves loki logs.
+// Client is a simple client to retrieve loki logs.
 type Client struct {
 	url  *url.URL
 	http http.Client
