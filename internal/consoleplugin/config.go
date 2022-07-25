@@ -30,6 +30,6 @@ func NewConfig(owner client.Object, lokiService string) Config {
 		Name:        "logging-view-plugin",
 		Image:       utils.GetComponentImage(constants.ConsolePluginName),
 		LokiService: lokiService,
-		LokiPort:    3001,
+		LokiPort:    8080,
 	}
 }

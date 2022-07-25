@@ -317,9 +317,9 @@ func (clusterRequest *ClusterLoggingRequest) verifyInputs(spec *logging.ClusterL
 func (clusterRequest *ClusterLoggingRequest) LogStoreLokiStackName() string {
 	logStore := clusterRequest.Cluster.Spec.LogStore
 	if logStore != nil && logStore.LokiStack.Name != "" {
-		return logStore.LokiStack.Name
+		return fmt.Sprintf("%s-gateway-http", logStore.LokiStack.Name)
 	}
-	return constants.LokiStackName
+	return fmt.Sprintf("%s-gateway-http", constants.LokiStackName)
 }
 
 // DefaultLokiStackURL returns the base URL of the default lokistack API.
