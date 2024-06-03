@@ -13,6 +13,7 @@ import (
 	"github.com/openshift/cluster-logging-operator/internal/generator/vector/output/http"
 	"github.com/openshift/cluster-logging-operator/internal/generator/vector/output/kafka"
 	"github.com/openshift/cluster-logging-operator/internal/generator/vector/output/loki"
+	"github.com/openshift/cluster-logging-operator/internal/generator/vector/output/otlp"
 	"github.com/openshift/cluster-logging-operator/internal/generator/vector/output/splunk"
 	"github.com/openshift/cluster-logging-operator/internal/generator/vector/output/syslog"
 	corev1 "k8s.io/api/core/v1"
@@ -50,6 +51,8 @@ func New(o logging.OutputSpec, inputs []string, secrets map[string]*corev1.Secre
 		els = append(els, syslog.New(baseID, o, inputs, secret, strategy, op)...)
 	case logging.OutputTypeAzureMonitor:
 		els = append(els, azuremonitor.New(baseID, o, inputs, secret, strategy, op)...)
+	case logging.OutputTypeOtlp:
+		els = append(els, otlp.New(baseID, o, inputs, secret, strategy, op)...)
 	}
 	return els
 }

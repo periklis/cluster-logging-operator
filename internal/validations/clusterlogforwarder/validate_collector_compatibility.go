@@ -19,6 +19,7 @@ var (
 		v1.OutputTypeSyslog,
 		v1.OutputTypeCloudwatch,
 		v1.OutputTypeAzureMonitor,
+		v1.OutputTypeOtlp,
 	)
 
 	fluentd = sets.NewString(
@@ -45,6 +46,7 @@ var (
 // Syslog              | Fluentd, Vector
 // Amazon CloudWatch   | Fluentd, Vector
 // Azure Monitor Logs  | Vector
+// Otlp				   | Vector
 func validateCollectorCompatibility(clf v1.ClusterLogForwarder, k8sClient client.Client, extras map[string]bool) (error, *v1.ClusterLogForwarderStatus) {
 	collector := constants.VectorName
 	supportedOutputs := vector

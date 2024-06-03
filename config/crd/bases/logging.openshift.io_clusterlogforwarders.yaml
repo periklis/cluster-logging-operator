@@ -760,6 +760,21 @@ spec:
                     name:
                       description: Name used to refer to the output from a `pipeline`.
                       type: string
+                    otlp:
+                      description: Otlp provided configuration for sending OTLP/HTTP
+                        with JSON-encoded Protobuf payload requests. https://opentelemetry.io/docs/specs/otlp/#json-protobuf-encoding
+                      properties:
+                        headers:
+                          additionalProperties:
+                            type: string
+                          description: 'Headers specify optional headers to be sent
+                            with the request default value is: {"Content-Type"="application/json"}'
+                          type: object
+                        timeout:
+                          description: Timeout specifies the request timeout in seconds.  If
+                            not set, 10s is used.
+                          type: integer
+                      type: object
                     secret:
                       description: "Secret for authentication. \n Names a secret in
                         the same namespace as the ClusterLogForwarder. Sensitive authentication
@@ -1055,6 +1070,7 @@ spec:
                       - splunk
                       - http
                       - azureMonitor
+                      - otlp
                       type: string
                     url:
                       description: "URL to send log records to. \n An absolute URL,

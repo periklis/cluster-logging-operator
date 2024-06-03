@@ -15,6 +15,7 @@ const (
 	OutputTypeSplunk             = "splunk"
 	OutputTypeHttp               = "http"
 	OutputTypeAzureMonitor       = "azureMonitor"
+	OutputTypeOtlp               = "otlp"
 )
 
 // OutputTypeSpec is a union of optional additional configuration specific to an
@@ -40,6 +41,8 @@ type OutputTypeSpec struct {
 	Http *Http `json:"http,omitempty"`
 	// +optional
 	AzureMonitor *AzureMonitor `json:"azureMonitor,omitempty"`
+	// +optional
+	Otlp *Otlp `json:"otlp,omitempty"`
 }
 
 // Cloudwatch provides configuration for the output type `cloudwatch`
@@ -310,18 +313,19 @@ type Http struct {
 	// +kubebuilder:validation:Enum:=GET;HEAD;POST;PUT;DELETE;OPTIONS;TRACE;PATCH
 	// +optional
 	Method string `json:"method,omitempty"`
+}
 
-	// Schema enables configuration of the way log records are normalized.
-	//
-	// Supported models: viaq(default), opentelemetry
-	//
-	// Logs are converted to the Open Telemetry specification according to schema value
-	//
-	// +kubebuilder:validation:Enum:=opentelemetry;viaq
-	// +kubebuilder:default:viaq
+// Otlp provided configuration for sending OTLP/HTTP with JSON-encoded Protobuf payload requests.
+// https://opentelemetry.io/docs/specs/otlp/#json-protobuf-encoding
+type Otlp struct {
+	// Headers specify optional headers to be sent with the request
+	// default value is: {"Content-Type"="application/json"}
 	// +optional
-	// +operator-sdk:csv:customresourcedefinitions:xDescriptors={"urn:alm:descriptor:com.tectonic.ui:hidden"}
-	Schema string `json:"-"`
+	Headers map[string]string `json:"headers,omitempty"`
+
+	// Timeout specifies the request timeout in seconds.  If not set, 10s is used.
+	// +optional
+	Timeout int `json:"timeout,omitempty"`
 }
 
 type AzureMonitor struct {

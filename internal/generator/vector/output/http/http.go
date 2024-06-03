@@ -10,7 +10,6 @@ import (
 	"github.com/openshift/cluster-logging-operator/internal/generator/vector/helpers"
 	vectorhelpers "github.com/openshift/cluster-logging-operator/internal/generator/vector/helpers"
 	"github.com/openshift/cluster-logging-operator/internal/generator/vector/normalize"
-	"github.com/openshift/cluster-logging-operator/internal/generator/vector/normalize/schema/otel"
 	"github.com/openshift/cluster-logging-operator/internal/generator/vector/output/common"
 	corev1 "k8s.io/api/core/v1"
 )
@@ -82,11 +81,6 @@ func New(id string, o logging.OutputSpec, inputs []string, secret *corev1.Secret
 		}
 	}
 	var els []Element
-	if op.Has(constants.AnnotationEnableSchema) && o.Http != nil && o.Http.Schema == constants.OTELSchema {
-		schemaID := vectorhelpers.MakeID(id, "otel")
-		els = append(els, otel.Transform(schemaID, inputs))
-		inputs = []string{schemaID}
-	}
 	els = append(els, Normalize(normalizeID, inputs))
 	sink := Output(id, o, []string{dedottedID}, secret, op)
 	if strategy != nil {

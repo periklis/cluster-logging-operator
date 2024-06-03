@@ -42,6 +42,11 @@ var (
 			logging.InputNameAudit:          ApplicationLogFile,
 			logging.InputNameInfrastructure: ApplicationLogFile,
 		},
+		logging.OutputTypeOtlp: {
+			logging.InputNameApplication:    ApplicationLogFile,
+			logging.InputNameAudit:          ApplicationLogFile,
+			logging.InputNameInfrastructure: ApplicationLogFile,
+		},
 		logging.OutputTypeFluentdForward: {
 			applicationLog:                  ApplicationLogFile,
 			auditLog:                        "/tmp/audit-logs",
