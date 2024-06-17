@@ -368,6 +368,12 @@ func verifyOutputSecret(namespace string, clfClient client.Client, output *loggi
 	if (output.Type == loggingv1.OutputTypeElasticsearch || output.Type == loggingv1.OutputTypeLoki) && extras[constants.MigrateDefaultOutput] {
 		return true
 	}
+
+	// Only for Otlp. If logcollector-token secret referenced then return true as secret will be created later
+	if output.Type == loggingv1.OutputTypeOtlp && output.Secret != nil && output.Secret.Name == constants.LogCollectorToken {
+		return true
+	}
+
 	log.V(3).Info("getting output secret", "output", output.Name, "secret", output.Secret.Name)
 	secret, err := getOutputSecret(namespace, clfClient, output.Secret.Name)
 	if err != nil {

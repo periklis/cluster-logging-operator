@@ -2,6 +2,7 @@ package otlp
 
 import (
 	logging "github.com/openshift/cluster-logging-operator/api/logging/v1"
+	"github.com/openshift/cluster-logging-operator/internal/constants"
 	. "github.com/openshift/cluster-logging-operator/internal/generator/framework"
 	genhelper "github.com/openshift/cluster-logging-operator/internal/generator/helpers"
 	. "github.com/openshift/cluster-logging-operator/internal/generator/vector/elements"
@@ -79,6 +80,7 @@ func New(id string, o logging.OutputSpec, inputs []string, secret *corev1.Secret
 			Request(id, o, strategy),
 		},
 		common.TLS(id, o, secret, op),
+		BearerTokenAuth(id, o, secret),
 	)
 }
 
@@ -96,12 +98,38 @@ func Request(id string, o logging.OutputSpec, strategy common.ConfigStrategy) *c
 	if o.Otlp != nil && o.Otlp.Timeout != 0 {
 		req.TimeoutSecs.Value = o.Otlp.Timeout
 	}
-	headers := map[string]string{}
-	if o.Otlp != nil && len(o.Otlp.Headers) != 0 {
-		headers = o.Http.Headers
+
+	if o.Otlp == nil || len(o.Otlp.Headers) == 0 {
+		return req
 	}
+
+	headers := make(map[string]string)
+	for key, value := range o.Otlp.Headers {
+		headers[key] = value
+	}
+
 	// required
 	headers["Content-Type"] = "application/json"
 	req.SetHeaders(headers)
+
 	return req
+}
+
+func BearerTokenAuth(componentID string, _ logging.OutputSpec, secret *corev1.Secret) []Element {
+	conf := []Element{}
+
+	if secret != nil {
+		// Inject token from secret, either provided by user using a custom secret
+		// or from the default logcollector service account.
+		if common.HasBearerTokenFileKey(secret) {
+			conf = append(conf, BasicAuthConf{
+				Desc:        "Bearer Auth Config",
+				ComponentID: componentID,
+			}, BearerToken{
+				Token: common.GetFromSecret(secret, constants.BearerTokenFileKey),
+			})
+		}
+	}
+
+	return conf
 }
