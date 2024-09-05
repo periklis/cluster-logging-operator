@@ -178,6 +178,10 @@ source = '''
   resource.attributes = append( resource.attributes,
       [{"key": "k8s.node.name", "value": {"stringValue": .hostname}}]
   )
+  # Append backward compatibility attributes
+  resource.attributes = append( resource.attributes,
+      [{"key": "log_type", "value": {"stringValue": .log_type}}]
+  )
   # Create logRecord object
   r = {}
   r.timeUnixNano = to_string(to_unix_timestamp(parse_timestamp!(.@timestamp, format:"%+"), unit:"nanoseconds"))

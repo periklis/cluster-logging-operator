@@ -10,6 +10,20 @@ import (
 
 // VRL for OTLP transforms by route
 const (
+	BackwardCompatBaseResourceAttributes = `
+# Append backward compatibility attributes
+resource.attributes = append( resource.attributes,
+    [{"key": "log_type", "value": {"stringValue": .log_type}}]
+)
+`
+	BackwardCompatContainerResourceAttributes = `
+# Append backward compatibility attributes for container logs
+resource.attributes = append( resource.attributes,
+	[{"key": "kubernetes_pod_name", "value": {"stringValue": get!(.,["kubernetes","pod_name"])}},
+	{"key": "kubernetes_container_name", "value": {"stringValue": get!(.,["kubernetes","container_name"])}},
+	{"key": "kubernetes_namespace_name", "value": {"stringValue": get!(.,["kubernetes","namespace_name"])}}]
+)
+`
 	BaseResourceAttributes = `
 # Create base resource attributes
 resource.attributes = []
@@ -185,6 +199,7 @@ func auditHostLogsVRL() string {
 		BaseResourceAttributes,
 		BackwardCompatBaseResourceAttributes,
 		HostResourceAttributes,
+		BackwardCompatBaseResourceAttributes,
 		LogRecord,
 		BodyFromInternal,
 		LogAttributes,
