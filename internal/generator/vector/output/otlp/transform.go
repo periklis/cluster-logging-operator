@@ -1,14 +1,29 @@
 package otlp
 
 import (
+	"strings"
+
 	. "github.com/openshift/cluster-logging-operator/internal/generator/framework"
 	"github.com/openshift/cluster-logging-operator/internal/generator/vector/elements"
 	"github.com/openshift/cluster-logging-operator/internal/generator/vector/helpers"
-	"strings"
 )
 
 // VRL for OTLP transforms by route
 const (
+	BackwardCompatBaseResourceAttributes = `
+# Append backward compatibility attributes
+resource.attributes = append( resource.attributes,
+    [{"key": "log_type", "value": {"stringValue": .log_type}}]
+)
+`
+	BackwardCompatContainerResourceAttributes = `
+# Append backward compatibility attributes for container logs
+resource.attributes = append( resource.attributes,
+	[{"key": "kubernetes_pod_name", "value": {"stringValue": get!(.,["kubernetes","pod_name"])}},
+	{"key": "kubernetes_container_name", "value": {"stringValue": get!(.,["kubernetes","container_name"])}},
+	{"key": "kubernetes_namespace_name", "value": {"stringValue": get!(.,["kubernetes","namespace_name"])}}]
+)
+`
 	BaseResourceAttributes = `
 # Create base resource attributes
 resource.attributes = []
@@ -141,6 +156,8 @@ func containerLogsVRL() string {
 	return strings.Join(helpers.TrimSpaces([]string{
 		BaseResourceAttributes,
 		ContainerResourceAttributes,
+		BackwardCompatBaseResourceAttributes,
+		BackwardCompatContainerResourceAttributes,
 		LogRecord,
 		BodyFromMessage,
 		LogAttributes,
@@ -152,6 +169,7 @@ func containerLogsVRL() string {
 func nodeLogsVRL() string {
 	return strings.Join(helpers.TrimSpaces([]string{
 		BaseResourceAttributes,
+		BackwardCompatBaseResourceAttributes,
 		LogRecord,
 		BodyFromMessage,
 		LogAttributes,
@@ -164,6 +182,7 @@ func auditHostLogsVRL() string {
 	return strings.Join(helpers.TrimSpaces([]string{
 		BaseResourceAttributes,
 		HostResourceAttributes,
+		BackwardCompatBaseResourceAttributes,
 		LogRecord,
 		BodyFromInternal,
 		LogAttributes,
@@ -174,6 +193,7 @@ func auditHostLogsVRL() string {
 func auditAPILogsVRL() string {
 	return strings.Join(helpers.TrimSpaces([]string{
 		BaseResourceAttributes,
+		BackwardCompatBaseResourceAttributes,
 		LogRecord,
 		BodyFromInternal,
 		LogAttributes,
@@ -185,6 +205,7 @@ func auditAPILogsVRL() string {
 func auditOvnLogsVRL() string {
 	return strings.Join(helpers.TrimSpaces([]string{
 		BaseResourceAttributes,
+		BackwardCompatBaseResourceAttributes,
 		LogRecord,
 		BodyFromMessage,
 		LogAttributes,
